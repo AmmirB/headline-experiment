@@ -1,69 +1,80 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const headlines = [
-        "Bold Move: Hulu Has Announced That They’re Gonna Go Ahead And Reboot ‘Shrill’ While It’s Still On Since You Idiots Will Watch Anything",
-        "New Study Reveals Most Children Unrepentant Sociopaths",
-        "Local Man Relieved He Can Finally Use The Term 'Fiancée' Without Feeling Pretentious",
-        // Add more headlines here
-    ];
+    let headlines = []; // Holds fetched headlines
+    let currentHeadlineIndex = 0; // Tracks the current headline index
+    let responses = []; // Stores user responses
 
-    let currentHeadlineIndex = 0;
+    // Fetches headlines from the JSON file
+    const fetchHeadlines = () => {
+        fetch('https://ammirb.github.io/headline-experiment/headlines.json')
+            .then(response => response.json())
+            .then(data => {
+                headlines = data; // Load the headlines into the array
+                // No need to call prepareHeadlines here as it's called after form submission
+            })
+            .catch(error => console.error('Error loading the headlines:', error));
+    };
 
+    // Prepares headlines: Shows the first 30 in order, then randomizes the rest
+    const prepareHeadlines = () => {
+        if (headlines.length > 30) {
+            const fixedHeadlines = headlines.slice(0, 30);
+            let randomHeadlines = headlines.slice(30);
+            randomHeadlines.sort(() => Math.random() - 0.5); // Simple shuffle
+            headlines = fixedHeadlines.concat(randomHeadlines);
+        }
+        displayNextHeadline();
+    };
+
+    // Displays the next headline or ends the experiment
     const displayNextHeadline = () => {
         if (currentHeadlineIndex < headlines.length) {
-            document.getElementById('headline').textContent = headlines[currentHeadlineIndex];
+            document.getElementById('headline').textContent = headlines[currentHeadlineIndex].text;
             currentHeadlineIndex++;
         } else {
-            // All headlines have been displayed, handle end of experiment here
             document.getElementById('headline').textContent = "Experiment completed. Thank you!";
-            // Hide buttons after experiment ends
             document.getElementById('buttonsContainer').style.display = 'none';
+            // Optionally, display results or statistics here
         }
     };
 
-    document.getElementById('realButton').addEventListener('click', displayNextHeadline);
-    document.getElementById('satireButton').addEventListener('click', displayNextHeadline);
+    // Records user's response and shows the next headline
+    const recordResponse = (choice) => {
+        if (currentHeadlineIndex <= headlines.length) {
+            responses.push({
+                headlineIndex: currentHeadlineIndex - 1, // Adjust for 0-based index
+                choice: choice,
+                headlineText: headlines[currentHeadlineIndex - 1].text
+            });
+        }
+    };
 
-    // Initially display the first headline
-    displayNextHeadline();
+    // Add event listeners for the Real and Satire buttons
+    document.getElementById('realButton').addEventListener('click', () => {
+        recordResponse('Real');
+        displayNextHeadline();
+    });
+
+    document.getElementById('satireButton').addEventListener('click', () => {
+        recordResponse('Satire');
+        displayNextHeadline();
+    });
+
+    // Handle the form submission to start the experiment
+    document.getElementById('startForm').addEventListener('submit', (event) => {
+        event.preventDefault(); // Prevent the form from submitting normally
+
+        // Hide the registration form and show the experiment container
+        document.getElementById('registrationContainer').style.display = 'none';
+        document.getElementById('experimentContainer').style.display = 'block';
+
+        const username = document.getElementById('username').value; // Collect the username
+        console.log('Username:', username); // Example usage, store or use the username as needed
+
+        prepareHeadlines(); // Prepare and display the headlines
+    });
+
+    // Initially hide the experiment and show the registration form
+    document.getElementById('experimentContainer').style.display = 'none';
+
+    fetchHeadlines(); // Fetch headlines as soon as the page is loaded
 });
-
-
-let responses = [];
-
-const recordResponse = (choice) => {
-    if (currentHeadlineIndex <= headlines.length) { // Adjust condition to <= because we increment currentHeadlineIndex before recording response
-        responses.push({
-            headlineIndex: currentHeadlineIndex - 1, // Adjust for 0-based index
-            choice: choice
-        });
-    }
-};
-
-document.getElementById('realButton').addEventListener('click', () => {
-    recordResponse('Real');
-    displayNextHeadline();
-});
-
-document.getElementById('satireButton').addEventListener('click', () => {
-    recordResponse('Satire');
-    displayNextHeadline();
-});
-
-
-document.getElementById('startForm').addEventListener('submit', (event) => {
-    event.preventDefault(); // Prevent form from submitting normally
-
-    // Hide the registration form and show the experiment container
-    document.getElementById('registrationContainer').style.display = 'none';
-    document.getElementById('experimentContainer').style.display = 'block';
-
-    // You can also store the username and consent for further processing
-    const username = document.getElementById('username').value;
-    console.log('Username:', username); // Example: Log or store this information
-
-    // Proceed to display the first headline
-    displayNextHeadline();
-});
-
-// Initially, hide the experiment and show the registration form
-document.getElementById('experimentContainer').style.display = 'none';
