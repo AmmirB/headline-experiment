@@ -40,13 +40,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Records user's response and shows the next headline
     const recordResponse = (choice) => {
         if (currentHeadlineIndex <= headlines.length) {
+            // Fetch the current headline based on the index
+            const currentHeadline = headlines[currentHeadlineIndex - 1];
             responses.push({
                 headlineIndex: currentHeadlineIndex - 1, // Adjust for 0-based index
                 choice: choice,
-                headlineText: headlines[currentHeadlineIndex - 1].text
+                headlineText: currentHeadline.text,
+                realValue: currentHeadline.label, // Store the actual label of the headline
             });
         }
     };
+    
 
     // Add event listeners for the Real and Satire buttons
     document.getElementById('realButton').addEventListener('click', () => {
