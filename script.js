@@ -40,16 +40,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // Records user's response and shows the next headline
     const recordResponse = (choice) => {
         if (currentHeadlineIndex <= headlines.length) {
-            // Fetch the current headline based on the index
             const currentHeadline = headlines[currentHeadlineIndex - 1];
-            responses.push({
+            const response = {
                 headlineIndex: currentHeadlineIndex - 1, // Adjust for 0-based index
                 choice: choice,
                 headlineText: currentHeadline.text,
                 realValue: currentHeadline.label, // Store the actual label of the headline
-            });
+                timestamp: firebase.firestore.Timestamp.now() // Add a timestamp
+            };
+            responses.push(response);
+    
+            // Save the response to Firestore
+            saveResponseToFirestore(response);
         }
     };
+    
+
+    // Function to record a response to Firestore
+    function saveResponseToFirestore(response) {
+        db.collection("responses").add(response)
+        .then((docRef) => {
+            console.log("Document written with ID: ", docRef.id);
+        })
+        .catch((error) => {
+            console.error("Error adding document: ", error);
+        });
+    }
+
     
 
     // Add event listeners for the Real and Satire buttons
