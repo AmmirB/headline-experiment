@@ -28,16 +28,14 @@
             <button type="submit">Start Experiment</button>
         </form>
     </div>
-    
-    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js"></script>
 
-    <!-- Add Firestore -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js"></script>
-
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script>
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
+        // Your web app's Firebase configuration
+        const firebaseApp = firebase.initializeApp({ 
+
           apiKey: "AIzaSyCuU21koZol2fr5I9mQI4efKEim3wQFddo",
           authDomain: "headlines-experiment.firebaseapp.com",
           projectId: "headlines-experiment",
@@ -45,15 +43,12 @@
           messagingSenderId: "991628436055",
           appId: "1:991628436055:web:e02e32b211d8d887a4b912",
           measurementId: "G-12Q4Q0HCST"
-    };
+        });
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+        const db = firebaseApp.firestore();
+        const auth = firebaseApp.auth();
 
-    // Initialize Firestore
-    const db = firebase.firestore();
-    </script>
-
+    </script>          
 
     <!-- Link to your JavaScript file to add functionality -->
     <script src="script.js"></script>

@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    let currentUsername = ''; // This will hold the username once it's entered.
     let headlines = []; // Holds fetched headlines
     let currentHeadlineIndex = 0; // Tracks the current headline index
     let responses = []; // Stores user responses
@@ -42,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentHeadlineIndex <= headlines.length) {
             const currentHeadline = headlines[currentHeadlineIndex - 1];
             const response = {
+                username: currentUsername, // Include the username in the response object
                 headlineIndex: currentHeadlineIndex - 1, // Adjust for 0-based index
                 choice: choice,
                 headlineText: currentHeadline.text,
@@ -55,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     
+    
 
     // Function to record a response to Firestore
     function saveResponseToFirestore(response) {
@@ -66,8 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Error adding document: ", error);
         });
     }
-
-    
 
     // Add event listeners for the Real and Satire buttons
     document.getElementById('realButton').addEventListener('click', () => {
@@ -87,12 +88,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Hide the registration form and show the experiment container
         document.getElementById('registrationContainer').style.display = 'none';
         document.getElementById('experimentContainer').style.display = 'block';
-
-        const username = document.getElementById('username').value; // Collect the username
-        console.log('Username:', username); // Example usage, store or use the username as needed
-
+    
+        currentUsername = document.getElementById('username').value; // Store the username globally
+        console.log('Username:', currentUsername); // Log the captured username
+    
         prepareHeadlines(); // Prepare and display the headlines
-    });
+});
 
     // Initially hide the experiment and show the registration form
     document.getElementById('experimentContainer').style.display = 'none';
