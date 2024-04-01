@@ -17,9 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Prepares headlines: Shows the first 30 in order, then randomizes the rest
     const prepareHeadlines = () => {
-        if (headlines.length > 30) {
-            const fixedHeadlines = headlines.slice(0, 30);
-            let randomHeadlines = headlines.slice(30);
+        if (headlines.length > 100) {
+            const fixedHeadlines = headlines.slice(0,100);
+            let randomHeadlines = headlines.slice(100);
             randomHeadlines.sort(() => Math.random() - 0.5); // Simple shuffle
             headlines = fixedHeadlines.concat(randomHeadlines);
         }
@@ -81,6 +81,11 @@ document.addEventListener('DOMContentLoaded', () => {
         displayNextHeadline();
     });
 
+    document.getElementById('seenButton').addEventListener('click', () => {
+        recordResponse('Seen');
+        displayNextHeadline();
+    });    
+
     // Handle the form submission to start the experiment
     document.getElementById('startForm').addEventListener('submit', (event) => {
         event.preventDefault(); // Prevent the form from submitting normally
@@ -99,4 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('experimentContainer').style.display = 'none';
 
     fetchHeadlines(); // Fetch headlines as soon as the page is loaded
+
+    
 });

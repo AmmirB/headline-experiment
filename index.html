@@ -15,6 +15,9 @@
             <button id="realButton">Real</button>
             <button id="satireButton">Satire</button>
         </div>
+        <div id="seenButtonContainer">
+            <button id="seenButton">I'm already familiar with this story</button>
+        </div>
     </div>
 
     <div id="registrationContainer">
@@ -23,11 +26,14 @@
             <input type="text" id="username" name="username" required>
             <div>
                 <input type="checkbox" id="consent" name="consent" required>
-                <label for="consent">I agree to the research terms.</label>
-            </div>
+                <label for="consent">I agree to the <a href="PIS.pdf" id="termsLink" target="_blank">research terms.</a></label>
+            </div>            
             <button type="submit">Start Experiment</button>
         </form>
     </div>
+
+
+    
 
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
